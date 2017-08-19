@@ -1,19 +1,27 @@
 """
 Scraper.py
-Finds available courses from the UofT ArtSci calendar 
+Finds available courses from the UofT ArtSci calendar using BeautifulSoup
 Bill Li
 Jul. 25th, 2017
+
+BeautifulSoup Tutorial
+http://web.stanford.edu/~zlotnick/TextAsData/Web_Scraping_with_Beautiful_Soup.html
 """
 
-import requests
-### Importing the required libraries
-from lxml import html
+# Importing the required libraries
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
 
-### Getting data from the URL
-"""tree will contain the entire HMTL file in a tree format"""
-page = requests.get('https://fas.calendar.utoronto.ca/print/search-courses-print?')
-tree = html.fromstring(page.content)
+r = urlopen('https://fas.calendar.utoronto.ca/print/search-courses-print?').read()
+soup = BeautifulSoup(r, "lxml")
+print(type(soup))
 
+print(soup.prettify())
+
+# Finding all courses
+tag = soup.find("div", class_="view-content")
+str = str(tag)
+print(str[0:1000])
 
 ### Creating a Course class
 class Course:
@@ -29,22 +37,7 @@ class Course:
         self.distribution = distribution
         self.breadth = breadth
 
-# Create a list of course names
-course_titles = tree.xpath('//h3/text()')
-course_hours = tree.xpath('//span[@class="views-field views-field-field-hours"]/span[@class="field-content"]/text()')
-course_description = tree.xpath('//div[@class="views-field views-field-body"]/div[@class="field-content"]/p/text()')
-course_prereq = tree.xpath(
-    '//div[@class="views-field views-field-field-prerequisite1"]/div[@class="field-content"]/strong/text()')
+courses = []
 
-### Print a list of the data
-print('Course Names: ', course_titles)
-print('Hours: ', course_hours)
-print('\n'.join(course_description))
-print(course_prereq)
-
-print(len(course_titles))
-print(len(course_hours))
-print(len(course_description))
-print(len(course_prereq))
-
-# TODO: generate flowchart using pygraphviz
+# Parsing the courses
+# TODO: parse the courses by tranversing through the text
