@@ -27,7 +27,7 @@ print(num_courses)
 class Course:
     'Contains info related to the course'
 
-    def __init__(self, html):
+    def __init__(self):
         self.info = {'title': '',
                      'hours': '',
                      'description': '',
@@ -37,7 +37,6 @@ class Course:
                      'prep': '',
                      'distribution': '',
                      'breadth': ''}
-        self.html = html
 
 
 ### Creating a Master List of All Courses
@@ -55,15 +54,34 @@ info_tags = {
     'breadth': "views-field views-field-field-breadth-req"}
 
 
-print(children[0].prettify())
-print(children[0].get_text())
+for child in children:
+    # # Debugging
+    # print(child.prettify())
+    # print("\nExtracting information from the html tags")
 
-print("\nTEST")
-for key in info_tags:
-    i = children[0].find(class_=info_tags[key])
-    if i is not None and key != 'title' and key != 'description':
-        i = i.find(class_="field-content")
-        t = i.find(text=True, recursive=False)
-    elif i is not None:
-        t = i.get_text()
-    print(t)
+    c = Course()
+    for key in info_tags:
+        t = None
+        i = child.find(class_=info_tags[key])
+
+        if i is not None:
+            if key == 'title':
+                i = i.find("h3")
+                t = i.get_text()
+            elif key == 'description':
+                i = i.findChildren(recursive=False)[0]
+                i = i.findChildren(recursive=False)[0]
+                t = i.get_text()
+            else:
+                i = i.find(class_="field-content")
+                t = i.find(text=True, recursive=False)
+
+        # Storing the information
+        if t is not None:
+            c.info[key] = t
+    courses.append(c)
+
+for i, c in enumerate(courses):
+    print("\n %s" % (i + 1))
+    for info_name in c.info:
+        print("%s: %s" % (info_name, c.info[info_name]))
