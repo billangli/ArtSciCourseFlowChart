@@ -23,12 +23,13 @@ num_courses = len(children)
 print(num_courses)
 
 
-### Creating a Course class
+# Creating a Course class
 class Course:
-    'Contains info related to the course'
+    """Contains info related to the course"""
 
     def __init__(self):
-        self.info = {'title': '',
+        self.info = {'code': '',
+                     'title': '',
                      'hours': '',
                      'description': '',
                      'prerequisite': '',
@@ -38,10 +39,15 @@ class Course:
                      'distribution': '',
                      'breadth': ''}
 
+    def department(self):
+        return self.info['code'][:3]
 
-### Creating a Master List of All Courses
+    def level(self):
+        return self.info['code'][3:6]
+
+
+# Creating a Master List of All Courses
 courses = []
-
 info_tags = {
     'title': "views-field views-field-title",
     'hours': "views-field views-field-field-hours",
@@ -53,7 +59,7 @@ info_tags = {
     'distribution': "views-field views-field-field-distribution-req",
     'breadth': "views-field views-field-field-breadth-req"}
 
-
+# Extracting the text from the html tags
 for child in children:
     # # Debugging
     # print(child.prettify())
@@ -79,6 +85,8 @@ for child in children:
         # Storing the information
         if t is not None:
             c.info[key] = t
+
+    c.info['code'] = c.info['title'][:8]
     courses.append(c)
 
 for i, c in enumerate(courses):
