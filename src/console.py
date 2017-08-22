@@ -7,18 +7,23 @@ Aug. 22nd, 2017
 
 from src.scraper import Scraper
 
-
-print("--- Welcome to the Arts and Science Course Flow Chart ---")
+print("--- Welcome to the Arts and Science Course Flow Chart ---\n")
 
 
 def main_menu():
     print("Enter 0 to load the course calendar")
     print("Enter 1 to update the course calendar from the UofT website")
+    print("Enter 9 to quit")
+
     choice = input()
     if choice == "0":
         load_calendar()
+        return True
     elif choice == "1":
         update_calendar()
+        return True
+    elif choice == "9":
+        return False
 
 
 def load_calendar():
@@ -34,4 +39,7 @@ def update_calendar():
 
 
 # Running the main menu
-main_menu()
+running = True
+while running:
+    running = main_menu()
+print("\n---Thanks for using the Flow Chart---")
